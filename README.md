@@ -1,4 +1,5 @@
-# Vesta-AI
+# Vesta-AI 
+AI-Powered Surplus Food Rescue Platform
 
 ## The Problem
 Small local bakeries, cafes, and grocery stores often have high-quality surplus food at the end of the day that goes to waste because they don't have the time to market it or find charities. Meanwhile, budget-conscious students or local residents are looking for affordable meals, and food banks need real-time alerts for donations.
