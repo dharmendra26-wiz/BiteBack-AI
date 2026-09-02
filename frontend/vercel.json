@@ -1,5 +1,7 @@
 {
   "rewrites": [
+    { "source": "/api/:match*", "destination": "https://ample-acceptance-production-e3f7.up.railway.app/api/:match*" },
+    { "source": "/ws/:match*", "destination": "https://ample-acceptance-production-e3f7.up.railway.app/ws/:match*" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
