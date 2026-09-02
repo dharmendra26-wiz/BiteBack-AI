@@ -105,23 +105,43 @@ export default function BrowsePage() {
   }, [category]);
 
   // WebSocket for real-time new listings
+  // VITE_WS_URL = Railway backend URL in production (e.g. https://vesta-backend.railway.app)
+  // Falls back to current origin for local dev (Vite proxy handles /ws → localhost:8080)
   useEffect(() => {
-    const client = new Client({
-      webSocketFactory: () => new SockJS('/ws'),
-      onConnect: () => {
-        client.subscribe('/topic/new-surplus', (msg) => {
-          const data = JSON.parse(msg.body);
-          setNewAlert(data);
-          fetchItems(category);
-          setTimeout(() => setNewAlert(null), 5000);
-        });
-      },
-      reconnectDelay: 5000,
-    });
-    client.activate();
-    stompRef.current = client;
-    return () => client.deactivate();
+    const wsBase = import.meta.env.VITE_WS_URL || window.location.origin;
+
+    let client;
+    try {
+      client = new Client({
+        webSocketFactory: () => new SockJS(`${wsBase}/ws`),
+        onConnect: () => {
+          client.subscribe('/topic/new-surplus', (msg) => {
+            const data = JSON.parse(msg.body);
+            setNewAlert(data);
+            fetchItems(category);
+            setTimeout(() => setNewAlert(null), 5000);
+          });
+        },
+        onStompError: (frame) => {
+          // Log but don't crash — page works fine without real-time alerts
+          console.warn('WebSocket unavailable (real-time alerts disabled):', frame?.headers?.message);
+        },
+        reconnectDelay: 10000,
+      });
+      client.activate();
+      stompRef.current = client;
+    } catch (err) {
+      // Graceful fallback: WebSocket not supported or blocked — polling still works via fetchItems
+      console.warn('WebSocket setup failed, real-time alerts disabled:', err.message);
+    }
+
+    return () => {
+      if (stompRef.current) {
+        try { stompRef.current.deactivate(); } catch (_) { /* ignore */ }
+      }
+    };
   }, []);
+
 
   const handleClaim = async () => {
     if (!claimModal) return;
