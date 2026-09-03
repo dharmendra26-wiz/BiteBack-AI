@@ -23,7 +23,6 @@ services:
     plan: free
     dockerContext: ./backend
     dockerfilePath: ./backend/Dockerfile
-    healthCheckPath: /api/surplus # Simple public endpoint to verify it's up
     envVars:
       - key: PORT
         value: "8080"
