@@ -15,7 +15,7 @@ public class ImpactRecord {
     @JoinColumn(name = "shop_id", nullable = false)
     private User shop;
 
-    @Column(nullable = false)
+    @Column(name = "co2_saved", nullable = false)
     private Double co2Saved;
 
     @Column(nullable = false)

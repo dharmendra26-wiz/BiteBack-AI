@@ -49,7 +49,7 @@ public class SurplusItem {
     @Column(nullable = false)
     private Status status;
 
-    @Column
+    @Column(name = "co2_saved")
     private Double co2Saved;
 
     public enum Status { AVAILABLE, PARTIALLY_CLAIMED, CLAIMED, DONATED, EXPIRED }
