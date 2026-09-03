@@ -27,10 +27,26 @@ services:
     envVars:
       - key: PORT
         value: "8080"
-      - key: DATABASE_URL
+      - key: DB_HOST
         fromDatabase:
           name: biteback-db
-          property: connectionString
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: biteback-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: biteback-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: biteback-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: biteback-db
+          property: password
       - key: JWT_SECRET
         generateValue: true # Render will auto-generate a secure random 256-bit string
       - key: AI_SERVICE_URL
