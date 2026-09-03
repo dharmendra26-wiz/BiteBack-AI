@@ -35,7 +35,11 @@ public class DataSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        if (userRepository.count() > 0) return;
+        // Idempotent: skip if demo users already exist (safe on persistent DB restarts)
+        if (userRepository.existsByEmail("shop@demo.com")) {
+            log.info("✅ Demo data already present — skipping seed.");
+            return;
+        }
         log.info("🌱 Seeding demo data...");
 
         User shop = userRepository.save(User.builder()

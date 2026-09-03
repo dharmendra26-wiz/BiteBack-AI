@@ -1,0 +1,54 @@
+version: "3.9"
+
+services:
+  # ── PostgreSQL ─────────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: vestaai-postgres
+    environment:
+      POSTGRES_DB: vestaai
+      POSTGRES_USER: vestaai
+      POSTGRES_PASSWORD: vestaai_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vestaai"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ── Spring Boot Backend ────────────────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: vestaai-backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: jdbc:postgresql://postgres:5432/vestaai?user=vestaai&password=vestaai_dev
+      JWT_SECRET: local_dev_jwt_secret_at_least_256_bits_long_random
+      AI_SERVICE_URL: http://ai-service:8000
+      CORS_ALLOWED_ORIGINS: http://localhost:5173,http://localhost:3000
+      PORT: 8080
+    ports:
+      - "8080:8080"
+
+  # ── FastAPI AI Microservice ────────────────────────────────────────────────
+  ai-service:
+    build:
+      context: ./ai-service
+      dockerfile: Dockerfile
+    container_name: vestaai-ai
+    environment:
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}   # optional — mock mode if empty
+      CORS_ALLOWED_ORIGINS: http://localhost:5173,http://localhost:8080
+      PORT: 8000
+    ports:
+      - "8000:8000"
+
+volumes:
+  postgres_data:
