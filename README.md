@@ -4,12 +4,15 @@
 
 **Connecting bakeries, cafes & grocery stores with customers and food banks — powered by AI**
 
-[![Java](https://img.shields.io/badge/Java_26-Spring_Boot_3.3-6DB33F?style=for-the-badge&logo=spring&logoColor=white)](https://spring.io/projects/spring-boot)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-bite--back--ai.vercel.app-22c55e?style=for-the-badge&logo=vercel&logoColor=white)](https://bite-back-ai.vercel.app)
+[![Java](https://img.shields.io/badge/Java_21-Spring_Boot_3.3-6DB33F?style=for-the-badge&logo=spring&logoColor=white)](https://spring.io/projects/spring-boot)
 [![Python](https://img.shields.io/badge/Python_3.11-FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
-[![React](https://img.shields.io/badge/React_19-Vite_8-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
+[![React](https://img.shields.io/badge/React_19-Vite-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
 [![Gemini](https://img.shields.io/badge/Google-Gemini_1.5_Flash-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://ai.google.dev)
 
 ![Vesta AI Screenshot](https://images.unsplash.com/photo-1608198093002-ad4e005484ec?w=1200&h=400&fit=crop)
+
+**👉 [Try the live demo](https://bite-back-ai.vercel.app) — log in instantly with one click (no sign-up needed)**
 
 </div>
 
@@ -17,40 +20,37 @@
 
 ## 🧠 What is Vesta AI?
 
-**Vesta AI** is a full-stack, AI-driven platform that tackles the UK's food waste crisis. Every day, millions of tonnes of surplus food go to waste while 8.1 million people face food insecurity. Vesta AI bridges this gap by:
+**Vesta AI** is a full-stack, AI-driven platform that tackles food waste. Every day, surplus food is discarded while millions face food insecurity. Vesta AI bridges this gap by:
 
 - 📷 **Scanning shop shelves with AI** — Gemini 1.5 Flash identifies food items from a photo in seconds
-- 💡 **Suggesting smart markdown prices** — a rule-based AI engine calculates the optimal discount based on expiry time, time of day, and quantity
+- 💡 **Suggesting smart markdown prices** — a multi-factor pricing engine calculates the optimal discount based on expiry time, time of day, foot traffic, and quantity
 - 🤝 **Matching surplus to food banks** — food banks are alerted in real-time when donations match their dietary requirements
 - 🌍 **Tracking environmental impact** — CO₂ saved and meals rescued are tracked for every transaction
 
 ---
 
-## 🏗️ System Architecture
+## 🏗️ Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                        Client Browser                           │
-│              React 19 + Vite 8 (localhost:5173)                 │
-│         (Landing, Browse, Shop Dashboard, Food Bank)            │
-└────────────────────────┬────────────────────────────────────────┘
-                         │  REST + WebSocket (STOMP)
-                         ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                  Spring Boot 3.3 Backend                        │
-│              Java 26 + JWT Auth (localhost:8080)                │
-│    /api/auth  /api/surplus  /api/claims  /api/donations         │
-│    /api/impact  /api/users  /api/ai (proxy)                     │
-│                     H2 In-Memory DB                             │
-└────────────────────────┬────────────────────────────────────────┘
-                         │  HTTP (internal proxy)
-                         ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                  FastAPI AI Microservice                         │
-│              Python 3.11 + Uvicorn (localhost:8000)             │
-│    POST /scan   →  Gemini 1.5 Flash (image → JSON items)        │
-│    POST /price  →  Smart markdown pricing algorithm             │
-└─────────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────────┐
+│                 React 19 + Vite  (Vercel)                            │
+│         Landing · Browse · Shop Dashboard · Food Bank Dashboard      │
+└──────────────────────┬───────────────────────────────────────────────┘
+                       │  REST + WebSocket/STOMP  (via Vercel proxy)
+                       ▼
+┌──────────────────────────────────────────────────────────────────────┐
+│              Spring Boot 3.3  (Render)                               │
+│  /api/auth  /api/surplus  /api/claims  /api/donations                │
+│  /api/impact  /api/users  /api/ai (internal proxy)                   │
+│              PostgreSQL  ·  JWT  ·  WebSocket                        │
+└──────────────────────┬───────────────────────────────────────────────┘
+                       │  HTTP (internal)
+                       ▼
+┌──────────────────────────────────────────────────────────────────────┐
+│              FastAPI AI Microservice  (Render)                       │
+│   POST /scan   →  Gemini 1.5 Flash (image → structured JSON)         │
+│   POST /price  →  Multi-factor markdown pricing algorithm            │
+└──────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
@@ -81,88 +81,6 @@
 
 ---
 
-## 🛠️ Tech Stack
-
-### Backend — `vesta-ai/` (Spring Boot)
-| Layer | Technology |
-|-------|-----------|
-| Language | Java 26 |
-| Framework | Spring Boot 3.3.4 |
-| Security | Spring Security + JWT (JJWT) |
-| ORM | Spring Data JPA / Hibernate 6 |
-| Database | H2 (in-memory, dev) |
-| Real-time | Spring WebSocket + STOMP |
-| Build | Maven (mvnw wrapper) |
-
-### AI Microservice — `ai-service/` (FastAPI)
-| Layer | Technology |
-|-------|-----------|
-| Language | Python 3.11 |
-| Framework | FastAPI 0.111 |
-| Server | Uvicorn |
-| Vision AI | Google Gemini 1.5 Flash |
-| Image Processing | Pillow |
-| ML Utilities | scikit-learn, NumPy |
-
-### Frontend — `frontend/` (React)
-| Layer | Technology |
-|-------|-----------|
-| Framework | React 19 + Vite 8 |
-| Routing | React Router v7 |
-| HTTP Client | Axios |
-| WebSocket | STOMP.js + SockJS |
-| Animations | Framer Motion 12 |
-| Charts | Recharts |
-| Notifications | react-hot-toast |
-
----
-
-## 🚀 Quick Start
-
-### Prerequisites
-- **Java 21+** (tested on Java 26)
-- **Python 3.10+**
-- **Node.js 18+**
-- A **free** [Google Gemini API key](https://aistudio.google.com/app/apikey) (optional — app works in demo mode without it)
-
-### 1. Clone the repository
-```bash
-git clone https://github.com/dharmendra26-wiz/BiteBack-AI.git
-cd BiteBack-AI
-```
-
-### 2. Start the AI Microservice (Terminal 1)
-```bash
-cd ai-service
-cp .env.example .env
-# Edit .env and add your GEMINI_API_KEY (optional)
-
-pip install -r requirements.txt
-uvicorn main:app --host 0.0.0.0 --port 8000 --reload
-```
-> ✅ Running at http://localhost:8000 | API docs: http://localhost:8000/docs
-
-### 3. Start the Spring Boot Backend (Terminal 2)
-```bash
-cd vesta-ai/vesta-ai
-./mvnw spring-boot:run       # Linux/Mac
-# OR
-.\mvnw.cmd spring-boot:run   # Windows
-```
-> ✅ Running at http://localhost:8080 | H2 Console: http://localhost:8080/h2-console
->
-> 🌱 **Demo data auto-seeded on startup!**
-
-### 4. Start the React Frontend (Terminal 3)
-```bash
-cd frontend
-npm install
-npm run dev
-```
-> ✅ Running at http://localhost:5173
-
----
-
 ## 🔑 Demo Credentials
 
 | Role | Email | Password | Access |
@@ -173,75 +91,112 @@ npm run dev
 
 ---
 
+## 🛠️ Tech Stack
+
+### Backend — `backend/` (Spring Boot)
+| Layer | Technology |
+|-------|-----------|
+| Language | Java 21 |
+| Framework | Spring Boot 3.3.4 |
+| Security | Spring Security 6 + JWT (JJWT 0.12) |
+| ORM | Spring Data JPA / Hibernate 6 |
+| Database | PostgreSQL (prod) · H2 (tests) |
+| Migrations | Flyway |
+| Real-time | Spring WebSocket + STOMP |
+| Build | Maven (mvnw wrapper) |
+
+### AI Microservice — `ai-service/` (FastAPI)
+| Layer | Technology |
+|-------|-----------|
+| Language | Python 3.11 |
+| Framework | FastAPI |
+| Server | Uvicorn |
+| Vision AI | Google Gemini 1.5 Flash |
+| Image Processing | Pillow |
+| Tests | pytest + httpx |
+
+### Frontend — `frontend/` (React)
+| Layer | Technology |
+|-------|-----------|
+| Framework | React 19 + Vite |
+| Routing | React Router v7 |
+| HTTP Client | Axios |
+| WebSocket | STOMP.js + SockJS |
+| Animations | Framer Motion |
+| Charts | Recharts |
+| Notifications | react-hot-toast |
+| Hosting | Vercel (with API reverse proxy) |
+
+---
+
 ## 📁 Project Structure
 
 ```
 BiteBack-AI/
-├── frontend/                          # React 19 + Vite 8
+├── frontend/                          # React 19 + Vite
 │   ├── src/
 │   │   ├── pages/
-│   │   │   ├── LandingPage.jsx        # Public marketing page
-│   │   │   ├── LoginPage.jsx          # JWT auth
-│   │   │   ├── RegisterPage.jsx       # Role-based registration
-│   │   │   ├── BrowsePage.jsx         # Public surplus marketplace
-│   │   │   ├── ShopDashboard.jsx      # Shop management + AI pricing
-│   │   │   ├── AIScannerPage.jsx      # Gemini vision scanner
-│   │   │   ├── ImpactDashboard.jsx    # CO₂ & meals impact tracker
-│   │   │   └── FoodBankDashboard.jsx  # Donation management
-│   │   ├── components/Navbar.jsx      # Authenticated nav
-│   │   ├── AuthContext.jsx            # Global JWT auth state
-│   │   └── api.js                     # Axios client + interceptors
+│   │   │   ├── LandingPage.jsx
+│   │   │   ├── LoginPage.jsx
+│   │   │   ├── RegisterPage.jsx
+│   │   │   ├── BrowsePage.jsx
+│   │   │   ├── ShopDashboard.jsx
+│   │   │   ├── AIScannerPage.jsx
+│   │   │   ├── ImpactDashboard.jsx
+│   │   │   └── FoodBankDashboard.jsx
+│   │   ├── components/Navbar.jsx
+│   │   ├── AuthContext.jsx
+│   │   └── api.js
+│   ├── vercel.json                    # SPA rewrites + API proxy rules
 │   └── vite.config.js
 │
 ├── ai-service/                        # FastAPI AI Microservice
-│   ├── main.py                        # App entry + CORS
+│   ├── main.py
 │   ├── requirements.txt
+│   ├── tests/
+│   │   ├── test_price.py
+│   │   └── test_scan.py
 │   └── routers/
 │       ├── scan.py                    # Gemini 1.5 Flash image scanner
-│       └── price.py                   # Smart markdown pricing engine
+│       └── price.py                   # Multi-factor markdown pricing engine
 │
-└── vesta-ai/vesta-ai/                 # Spring Boot Backend
-    └── src/main/java/com/vesta/vestaai/
-        ├── controller/
-        │   ├── AuthController.java    # JWT register/login/me
-        │   ├── SurplusController.java # CRUD + WebSocket broadcast
-        │   ├── ClaimController.java   # Customer claim flow
-        │   ├── DonationController.java# Food bank donation requests
-        │   ├── ImpactController.java  # Environmental metrics
-        │   └── AiController.java      # Proxy to AI microservice
-        ├── model/                     # JPA entities (User, SurplusItem, Claim, Donation, ImpactRecord)
-        ├── repository/                # Spring Data JPA repositories
-        ├── security/                  # JWT filter + config (SecurityConfig)
-        ├── config/                    # WebSocket STOMP config
-        └── vestaai/DataSeeder.java    # Auto-seeds demo data on startup
+├── backend/                           # Spring Boot Backend
+│   └── src/main/java/com/vesta/vestaai/
+│       ├── controller/
+│       ├── model/                     # JPA entities
+│       ├── repository/
+│       ├── security/                  # JWT filter + SecurityConfig
+│       ├── config/                    # WebSocket STOMP config
+│       └── DataSeeder.java
+│
+└── docker-compose.yml                 # Local dev: Postgres + backend + ai-service
 ```
 
 ---
 
 ## 🔌 API Reference
 
-### Auth Endpoints
+### Auth
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | POST | `/api/auth/register` | Create account (SHOP / CUSTOMER / FOOD_BANK) |
 | POST | `/api/auth/login` | Returns JWT token |
 | GET | `/api/auth/me` | Get current user profile |
 
-### Surplus Endpoints
+### Surplus
 | Method | Endpoint | Auth | Description |
 |--------|----------|------|-------------|
 | GET | `/api/surplus` | Public | List all available surplus |
-| GET | `/api/surplus?category=Bakery` | Public | Filter by category |
-| GET | `/api/surplus/my` | SHOP | Get your listings |
-| POST | `/api/surplus` | SHOP | Create new listing |
+| GET | `/api/surplus/my` | SHOP | Your listings |
+| POST | `/api/surplus` | SHOP | Create listing |
 | PATCH | `/api/surplus/{id}` | SHOP | Update listing |
 | DELETE | `/api/surplus/{id}` | SHOP | Delete listing |
 
-### AI Endpoints
+### AI
 | Method | Endpoint | Auth | Description |
 |--------|----------|------|-------------|
 | POST | `/api/ai/scan` | SHOP | Scan shelf image → item list |
-| POST | `/api/ai/price` | Auth | Get smart markdown suggestion |
+| POST | `/api/ai/price` | Auth | Smart markdown suggestion |
 
 ### WebSocket
 | Topic | Event |
@@ -252,7 +207,7 @@ BiteBack-AI/
 
 ## 🧩 AI Pricing Algorithm
 
-The markdown pricing engine (`ai-service/routers/price.py`) uses a multi-factor scoring model:
+The pricing engine (`ai-service/routers/price.py`) uses a multi-factor model:
 
 ```
 Urgency Tier (hours until expiry):
@@ -262,34 +217,69 @@ Urgency Tier (hours until expiry):
   > 4h  → LOW      → 25% base discount
 
 Adjustments:
-  🕛 Peak hours (lunch/dinner) → -5% (less urgency to discount)
-  🌙 Late night / early AM     → +8% (maximize clearance)
-  📦 High quantity (>20)       → +5% (need to move volume)
-  📦 Low quantity (≤3)         → -5% (scarcity, less incentive)
+  🕛 Peak hours (lunch/dinner) → −5%
+  🌙 Late night / early AM     → +8%
+  📦 High quantity (>20)       → +5%
+  📦 Low quantity (≤3)         → −5%
   📉 Slow-moving category      → +8%
-  📈 Fast-moving category      → -5%
+  📈 Fast-moving category      → −5%
 
-Final price = max(original × (1 - discount), £0.50)
+Final price = max(original × (1 − discount), £0.50)
 ```
 
 ---
 
-## 🌱 Environmental Impact Tracking
+## 🛠 Local Development
 
-Each surplus item has a `co2Saved` field (kg). On the Impact Dashboard:
-- **CO₂ Saved** — sum of co2Saved across all rescued items
-- **Meals Rescued** — total quantity claimed/donated
-- **Money Saved** — difference between original and discounted prices
+### Prerequisites
+- **Java 21+**
+- **Python 3.10+**
+- **Node.js 18+**
+- **Docker & Docker Compose** (for local Postgres)
+- A free [Google Gemini API key](https://aistudio.google.com/app/apikey) (optional — mock mode works without it)
 
----
+### 1. Clone
+```bash
+git clone https://github.com/dharmendra26-wiz/BiteBack-AI.git
+cd BiteBack-AI
+```
 
-## 🤝 Contributing
+### 2. Configure environment
+```bash
+# AI service
+cp ai-service/.env.example ai-service/.env
+# Edit ai-service/.env and add your GEMINI_API_KEY (optional)
 
-1. Fork the repo
-2. Create a feature branch: `git checkout -b feature/your-feature`
-3. Commit: `git commit -m "feat: add your feature"`
-4. Push: `git push origin feature/your-feature`
-5. Open a Pull Request
+# Backend (auto-configured via Docker Compose)
+cp backend/.env.example backend/.env
+```
+
+### 3. Start with Docker Compose (recommended)
+```bash
+docker-compose up
+```
+This starts Postgres, the Spring Boot backend, and the FastAPI AI service in one command.
+
+### 4. Start the frontend
+```bash
+cd frontend
+npm install
+npm run dev
+```
+> ✅ App at http://localhost:5173 · Backend at http://localhost:8080 · AI at http://localhost:8000
+
+### Manual startup (without Docker)
+```bash
+# Terminal 1 — AI service
+cd ai-service && pip install -r requirements.txt
+uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+# Terminal 2 — Backend (requires local Postgres on port 5432)
+cd backend && ./mvnw spring-boot:run -Dspring-boot.run.profiles=local
+
+# Terminal 3 — Frontend
+cd frontend && npm run dev
+```
 
 ---
 
@@ -300,5 +290,5 @@ MIT License — free to use, modify, and distribute.
 ---
 
 <div align="center">
-  Made with 💚 to fight food waste · Built with Java + Python + React + Gemini AI
+  Made with 💚 to fight food waste · Java + Python + React + Gemini AI
 </div>

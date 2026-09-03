@@ -1,68 +1,45 @@
-# ─── Node.js / Frontend ─────────────────────────────────────────────────────
-node_modules/
-dist/
-build/
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.DS_Store
-
-# ─── Vite ───────────────────────────────────────────────────────────────────
-frontend/.vite/
-
-# ─── Python / AI Service ─────────────────────────────────────────────────────
-__pycache__/
-*.py[cod]
-*.pyo
-*.pyd
-.Python
-.venv/
-venv/
-env/
-ENV/
-*.egg-info/
-dist/
-*.egg
-pip-log.txt
-
-# AI service secrets
-ai-service/.env
-
-# ─── Java / Spring Boot ──────────────────────────────────────────────────────
-vesta-ai/vesta-ai/target/
+# ── Java / Maven ──────────────────────────────────────────────────────
+backend/target/
 *.class
 *.jar
 *.war
-*.nar
 *.ear
-*.zip
-*.tar.gz
-*.rar
-*.iml
 
-# ─── IDE ─────────────────────────────────────────────────────────────────────
+# ── Python ────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+*.egg-info/
+dist/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ── Node / Frontend ───────────────────────────────────────────────────
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# ── Environment variables ─────────────────────────────────────────────
+.env
+.env.local
+.env.production
+!.env.example
+
+# ── Editors ───────────────────────────────────────────────────────────
 .idea/
 .vscode/
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-.project
-.classpath
-.settings/
-
-# ─── OS ──────────────────────────────────────────────────────────────────────
+*.iml
+*.swp
+*.DS_Store
 Thumbs.db
-.DS_Store
-desktop.ini
 
-# ─── Secrets (NEVER commit these) ────────────────────────────────────────────
-*.env
-.env
-!.env.example
-!ai-service/.env.example
+# ── Scratch / debug files ─────────────────────────────────────────────
+test_*.py
+check_*.py
+*.log
+logs*.txt
+found_domains.txt

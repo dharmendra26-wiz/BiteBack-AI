@@ -1,4 +1,4 @@
-package com.vesta.vestaai.vestaai;
+package com.vesta.vestaai;
 
 import com.vesta.vestaai.model.*;
 import com.vesta.vestaai.repository.*;
